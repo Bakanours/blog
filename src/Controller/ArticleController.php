@@ -17,13 +17,40 @@ class ArticleController extends AbstractController
     }
 
     /**
-    * @Route("/tableaux", name="app_tableaux")
+     * @Route("/tableaux", name="app_tableaux")
      */
-    public function tabs(){
-        $random_numbers = [rand(1,10)];
-        var_dump("les tableaux seront ici");
-        var_dump($random_numbers);
-        die();
+    public function tableaux(): Response
+    {
+        return $this->render('article/tableaux.html.twig', [
+            'controller_name' => 'ArticleController',
+        ]);
+
+    }
+
+    /**
+     * @Route ("article/{numero}", name="afficher_article")
+     */
+    public function afficher($numero) {
+
+        /*return new Response(sprintf(
+            'Page d\'affichage d\'un article "%s".', $numero
+            )); */
+        return $this->render('article/unarticle.html.twig', [
+            'controller_name' => 'ArticleController',
+            'numero' => $numero,
+        ]);
+    }
+    /**
+     * @Route("/article/{numero}/vote/{direction}", name="votes")
+     */
+    public function vote($numero, $direction){
+         if($direction === 'up') {
+             $currentVoteCount = rand(7, 50);
+         } else {
+             $currentVoteCount = rand(0, 5);
+         }
+
+         return $this->json(['votes' => $currentVoteCount]);
 
     }
 }

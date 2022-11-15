@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Article {{ numero }}!{% endblock %}
+
+{% block body %}
+    <div class="container">
+
+            <h2>Titre de mon article {{ numero }}</h2>
+
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores commodi dolor ducimus, eius eos error ex facere hic maiores officia, optio quae ratione sed, similique suscipit voluptas voluptate? Inventore, provident.</p>
+
+        <div class="js-vote-arrows">
+            <a class="vote-up" href="#" data-direction="up">+</a>
+            <a class="vote-down" href="#" data-direction="down">-</a>
+            <span>+ <span class="js-vote-total">0</span></span>
+        </div>
+
+    </div>
+    {# end container #}
+
+    {% block javascripts %}
+        {{ parent() }}
+        <script src="{{ asset('js/vote.js') }}"></script>
+    {% endblock %}
+
+
+{% endblock %}
