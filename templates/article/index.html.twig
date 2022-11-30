@@ -18,7 +18,7 @@
         <li>Your template at <code><a href="{{ 'C:/Users/Saniya/Documents/ISL/symfony/excercices/blog/templates/article/index.html.twig'|file_link(0) }}">templates/article/index.html.twig</a></code></li>
     </ul>
     #}
-    <h2>Lien vers un article</h2>
-    <p><a href="{{ path('afficher_article', { numero: '1'}) }}">Article </a></p>
+    <h2>Lien vers les articles</h2>
+    <p><a href="{{ path('all_articles') }}">Articles</a></p>
 </div>
 {% endblock %}

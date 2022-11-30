@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Tous les articles {% endblock %}
+{% block body%}
+<h1>Voici la liste de tous les articles du blog :)</h1>
+    <ul>
+        {% for article in allarticles %}
+        <li><a href="{{ path('afficher_article', { id : article.id }) }}">{{ article.titre }}</a></li>
+
+        {% endfor %}
+    </ul>
+
+{% endblock %}
