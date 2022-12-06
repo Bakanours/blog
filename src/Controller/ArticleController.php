@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 //use http\Client\Request;
+use App\Form\ArticleType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Article;
+use App\Entity\Categorie;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ArticleController extends AbstractController
@@ -81,9 +83,7 @@ class ArticleController extends AbstractController
         $entityManager->persist($article);
         $entityManager->flush($article);
 
-        return $this->render('article/index.html.twig', [
-            'controller_name' => 'ArticleController',
-        ]);
+        return $this->redirectToRoute('afficher_article', ['id'=>$article->getId()]);
 
 
     }
@@ -98,6 +98,62 @@ class ArticleController extends AbstractController
         return $this->render('article/allarticles.html.twig', [
             'controller_name' => 'ArticleController',
             'allarticles' => $allarticles,
+        ]);
+    }
+
+    //sauver mes categories en db, hardcodé
+    #[Route('/savecategorie', name: 'save-categorie')]
+    public function saveCategorie(EntityManagerInterface $entityManager)
+    {
+        $categorie = new Categorie();
+        $categorie->setNomDeCategorie('Catégorie 5');
+
+        $entityManager->persist($categorie);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('all_articles');
+    }
+    // test pour mettre mes articles dans une categorie, comment update mes articles en ajoutant une categorie ?
+
+    #[Route('/cat1', name: 'cat-1')]
+    public function categorize(EntityManagerInterface $entityManager){
+
+        $repository = $entityManager->getRepository(Article::class);
+        $article = $repository->find(1);
+        // comment ecrire pour que l'article ait la categorie 1 ? $article->addCategory(id=1);
+        $repositoryCat = $entityManager->getRepository(Categorie::class);
+        $categorie = $repositoryCat->find(1);
+        $article->setCategorie($categorie);
+
+        $entityManager->persist($article);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('all_articles');
+
+    }
+
+    //formulaires
+
+    #[Route('/addArticle', name:'add_article')]
+    public function addArticle(Request $request, EntityManagerInterface $entityManager) : Response {
+        $article = new Article();
+        $article->setDatecreation(new \DateTime());
+        $form = $this->createForm(ArticleType::class, $article);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // remplir article avec les donnees du form
+            $article = $form->getData();
+            //ajouter à la DB
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($article);
+            $entityManager->flush();
+
+            //si tout est bon affiche le nouvel article
+            return $this->redirectToRoute('afficher_article', ['id'=>$article->getId()]);
+        }
+
+        return $this->render('article/addArticle.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 
